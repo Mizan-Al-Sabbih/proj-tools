@@ -1,0 +1,28 @@
+{
+  "name": "proj-tools",
+  "version": "1.0.0",
+  "description": "A CLI that setup your project.",
+  "main": "src/index.js",
+  "bin": {
+    "proj": "bin/proj.js",
+    "proj-install": "bin/proj-install.js"
+  },
+  "dependencies": {
+    "inquirer": "^8.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mizan-Al-Sabbih/proj-tools.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mizan-Al-Sabbih/proj-tools/issues"
+  },
+  "homepage": "https://github.com/Mizan-Al-Sabbih/proj-tools#readme"
+}
