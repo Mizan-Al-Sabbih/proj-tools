@@ -1,14 +1,15 @@
+// fs = require('fs');
 const inquirer = require('inquirer');
-const fs = require('fs');
+const path = require('path');
 
-async function projectSetup() {
-
-const answers = await inquirer.prompt([
+ inquirer
+  .prompt([
   {
-    type: 'text',
+    type: 'confirm',
     name: 'project',
-    message: "Project Name: "
+    message: 'Project Name: ',
+    default: true
   }
-]);
-  fs.mkdir(answers.text);
-}
+]).then(answers => {
+  console.log(answers);
+});
