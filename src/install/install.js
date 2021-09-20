@@ -1,9 +1,12 @@
 const { spawn } = require('child_process');
 const inquirer = require('inquirer');
 const arg = require('arg');
+const { promisify } = require('util');
 
-function argument() {
-  const args = arg(
+const argumentz = promisify(arg);
+
+function argument(argv) {
+  const args = argumentz(
     {
       "--save-dev": Boolean,
       "--save-prod": Boolean,
@@ -20,13 +23,13 @@ function argument() {
   return {
     saveInDevdependencies: args['--save-dev', '--save-prod'] || false,
     installGlobally: args['--global'] || false,
-    installAnyPackage: args._[0],
+    installAnyPackage: argv[0],
     notCreateAnyBinDirectory: args['--no-bin-links'] || false,
-  }
+  };
 }
 
 async function workingFunction(arguments) {
-  if (arguments.installAnyPackage ) {
+  if (arguments.installAnyPackage) {
     return {
       ... arguments,
       installPackage: arguments.installAnyPackage,
@@ -36,14 +39,14 @@ async function workingFunction(arguments) {
   const questions = [];
   
   if (!arguments.installAnyPackage) {
-   questions.push({
+   await questions.push({
      type: 'text',
      name: 'package',
      message: 'What package do you want to install?',
    });
 }
 
-  questions.push({
+  await questions.push({
     type: 'list',
     name: 'packageManager',
     message: 'Which package manager do you want to use?',
@@ -54,9 +57,9 @@ async function workingFunction(arguments) {
   });
   
   const answers = await inquirer.prompt(questions);
-  
+
   switch (answers.packageManager) {
-    case'NPM':
+      case'NPM':
        npmInstall();
       break;
     case'Yarn':
@@ -67,15 +70,7 @@ async function workingFunction(arguments) {
   }
 }
 
-function cli(args) {
-  let arguments = argument(args);
-  arguments = workingFunction(args);
-  console.log(arguments);
-}
-
-cli();
-
-function npmInstall() {
+ function npmInstall() {
   const npm = spawn('npm', ['install', `${arguments.installAnyPackage || answers.package} ${arguments}`]);
   npm.stderr.on('data', (data) => {
    console.log(data);
@@ -115,4 +110,11 @@ function npmInstall(answers) {
      console.log(`Process exited with code: ${code}`);
    };
  });
+} 
+
+function cli(args) {
+  let arguments =  argument(args);
+  arguments = workingFunction(args);
 }
+
+cli();
