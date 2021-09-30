@@ -1,2 +1,2 @@
 language = "nodejs"
-run = "node src/help.js"
+run = "node src/install/install.js"

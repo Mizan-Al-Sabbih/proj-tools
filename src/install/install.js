@@ -1,12 +1,9 @@
-const { spawn } = require('child_process');
+const { spawn } = ('child_process');
 const inquirer = require('inquirer');
 const arg = require('arg');
-const { promisify } = require('util');
-
-const argumentz = promisify(arg);
 
 function argument(argv) {
-  const args = argumentz(
+  const args = arg(
     {
       "--save-dev": Boolean,
       "--save-prod": Boolean,
@@ -17,13 +14,13 @@ function argument(argv) {
       "-g": "--global",
     },
     {
-       argv: process.argv.slice(2),
+      argv: process.argv.slice(2)
     }
   );
   return {
-    saveInDevdependencies: args['--save-dev', '--save-prod'] || false,
     installGlobally: args['--global'] || false,
-    installAnyPackage: argv[0],
+    saveInDevdependencies: args['--save-dev', '--save-prod'] || false,
+    installAnyPackage: args._[0],
     notCreateAnyBinDirectory: args['--no-bin-links'] || false,
   };
 }
@@ -39,14 +36,14 @@ async function workingFunction(arguments) {
   const questions = [];
   
   if (!arguments.installAnyPackage) {
-   await questions.push({
+    questions.push({
      type: 'text',
      name: 'package',
      message: 'What package do you want to install?',
    });
 }
 
-  await questions.push({
+   questions.push({
     type: 'list',
     name: 'packageManager',
     message: 'Which package manager do you want to use?',
@@ -59,7 +56,7 @@ async function workingFunction(arguments) {
   const answers = await inquirer.prompt(questions);
 
   switch (answers.packageManager) {
-      case'NPM':
+    case'NPM':
        npmInstall();
       break;
     case'Yarn':
@@ -110,11 +107,11 @@ function npmInstall(answers) {
      console.log(`Process exited with code: ${code}`);
    };
  });
-} 
+}
 
-function cli(args) {
-  let arguments =  argument(args);
-  arguments = workingFunction(args);
+async function cli(args) {
+  let arguments = argument(args);
+  arguments = await workingFunction(args);
 }
 
 cli();
