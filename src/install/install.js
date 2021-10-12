@@ -1,4 +1,4 @@
-const { spawn } = ('child_process');
+const { spawn } = require('child_process');
 const inquirer = require('inquirer');
 const arg = require('arg');
 
@@ -25,7 +25,7 @@ function argument(argv) {
   };
 }
 
-async function workingFunction(arguments) {
+async function workingFunction(... arguments) {
   if (arguments.installAnyPackage) {
     return {
       ... arguments,
@@ -36,14 +36,14 @@ async function workingFunction(arguments) {
   const questions = [];
   
   if (!arguments.installAnyPackage) {
-    questions.push({
+    await questions.push({
      type: 'text',
      name: 'package',
      message: 'What package do you want to install?',
    });
 }
 
-   questions.push({
+   await questions.push({
     type: 'list',
     name: 'packageManager',
     message: 'Which package manager do you want to use?',
@@ -67,19 +67,16 @@ async function workingFunction(arguments) {
   }
 }
 
- function npmInstall() {
+ function npmInstall(... answers) {
   const npm = spawn('npm', ['install', `${arguments.installAnyPackage || answers.package} ${arguments}`]);
   npm.stderr.on('data', (data) => {
-   console.log(data);
+   console.log(data.toString);
  });
   npm.stdout.on('data', (data) => {
-   if (fs.existsSync(path.join('/node_modules', answers.package))) {
-    console.log("Updating package configuration \n \n" + data);
-   }
-    console.log("Installing package \n \n" + data);
+    console.log("Installing package \n \n" + data.toString);
  });
    npm.on('error', (error) => {
-    console.log(error);
+    console.log(error.toString);
  });
   npm.on('close', (code) => {
     if (code){
@@ -88,19 +85,16 @@ async function workingFunction(arguments) {
  });
 }
 
-function npmInstall(answers) {
+function yarnInstall(... answers) {
   const yarn = spawn('yarn', ['add', `${arguments.installAnyPackage || answers.package} ${arguments}`]);
   yarn.stderr.on('data', (data) => {
-   console.log(data);
+   console.log(data.toString);
  });
   yarn.stdout.on('data', (data) => {
-   if (fs.existsSync(path.join('/node_modules', answers.package))) {
-    console.log("Updating package configuration \n \n" + data);
-   }
-    console.log("Installing package \n \n" + data);
+    console.log("Installing package \n \n" + data.toString);
  });
    yarn.on('error', (error) => {
-    console.log(error);
+    console.log(error.toString);
  });
   yarn.on('close', (code) => {
     if (code){

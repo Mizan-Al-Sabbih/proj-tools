@@ -2,7 +2,7 @@
   "name": "proj-tools",
   "version": "1.0.3",
   "description": "Project tools for node.js",
-  "main": "src/index.js",
+  "main": "src/install/install.js",
   "bin": {
     "proj-tools": "bin/proj-tools.js",
     "proj": "bin/proj.js",
