@@ -25,7 +25,7 @@ function argument(argv) {
   };
 }
 
-async function workingFunction(... arguments) {
+async function workingFunction(arguments) {
   if (arguments.installAnyPackage) {
     return {
       ... arguments,
@@ -67,16 +67,16 @@ async function workingFunction(... arguments) {
   }
 }
 
- function npmInstall(... answers) {
+ function npmInstall(answers) {
   const npm = spawn('npm', ['install', `${arguments.installAnyPackage || answers.package} ${arguments}`]);
-  npm.stderr.on('data', (data) => {
-   console.log(data.toString);
+  npm.stderr.on('data', stderr => {
+   console.log(stderr.toString());
  });
-  npm.stdout.on('data', (data) => {
-    console.log("Installing package \n \n" + data.toString);
+  npm.stdout.on('data', stdout => {
+    console.log("Installing package \n \n" + stdout.toString());
  });
    npm.on('error', (error) => {
-    console.log(error.toString);
+    console.log(error);
  });
   npm.on('close', (code) => {
     if (code){
@@ -85,16 +85,16 @@ async function workingFunction(... arguments) {
  });
 }
 
-function yarnInstall(... answers) {
+function yarnInstall(answers) {
   const yarn = spawn('yarn', ['add', `${arguments.installAnyPackage || answers.package} ${arguments}`]);
-  yarn.stderr.on('data', (data) => {
-   console.log(data.toString);
+  yarn.stderr.on('data', stderr => {
+   console.log(stderr.toString());
  });
-  yarn.stdout.on('data', (data) => {
-    console.log("Installing package \n \n" + data.toString);
+  yarn.stdout.on('data', stdout => {
+    console.log("Installing package \n \n" + stdout.toString());
  });
    yarn.on('error', (error) => {
-    console.log(error.toString);
+    console.log(error);
  });
   yarn.on('close', (code) => {
     if (code){
